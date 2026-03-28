@@ -1,0 +1,16 @@
+{
+  "name": "riscv-emulator",
+  "version": "1.0.0",
+  "description": "RISC-V RV32I Emulator Desktop",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-c": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^36.1.0"
+  }
+}

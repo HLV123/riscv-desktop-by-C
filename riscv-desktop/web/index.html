@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISC-V RV32I Emulator</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="toolbar">
+  <h1>⚡ RISC-V RV32I Emulator</h1>
+  <button class="btn primary" id="btn-load">📂 Load</button>
+  <button class="btn success" id="btn-run" disabled>▶ Run</button>
+  <button class="btn" id="btn-pause" disabled>⏸ Pause</button>
+  <button class="btn" id="btn-step" disabled>⏭ Step</button>
+  <button class="btn danger" id="btn-reset" disabled>↺ Reset</button>
+  <span class="sep">|</span>
+  Speed:
+  <select id="speed-select">
+    <option value="200">GPIO (200/frame)</option>
+    <option value="1000">Slow (1K/frame)</option>
+    <option value="10000" selected>Med (10K/frame)</option>
+    <option value="100000">Fast (100K/frame)</option>
+    <option value="500000">Turbo (500K/frame)</option>
+  </select>
+  <span class="sep">|</span>
+  Regs:
+  <select id="reg-fmt">
+    <option value="hex">HEX</option>
+    <option value="dec">DEC</option>
+    <option value="bin">BIN</option>
+  </select>
+  <div id="status-bar">
+    <span id="mips-display">0.00 MIPS</span>
+    <span id="cycle-display">Cycle: 0</span>
+    <span class="status-pill idle" id="state-pill">IDLE</span>
+  </div>
+</div>
+
+<div id="main">
+
+  <div class="panel" id="disasm-panel">
+    <div class="panel-header">
+      📋 Disassembly
+      <span class="hint">Click = breakpoint</span>
+    </div>
+    <div class="panel-body" id="disasm-body">
+      <div class="placeholder">Load a program to see disassembly.</div>
+    </div>
+  </div>
+
+  <div class="panel" id="regs-panel">
+    <div class="panel-header">
+      🔢 Registers
+      <span id="exception-label"></span>
+    </div>
+    <div class="panel-body" id="regs-body">
+      <div class="placeholder">No program loaded.</div>
+    </div>
+  </div>
+
+  <div class="panel" id="periph-panel">
+    <div class="panel-header">🔌 Peripherals</div>
+    <div class="panel-body" id="periph-body">
+
+      <div class="periph-section">
+        <h3>GPIO (0x40000000)</h3>
+        <div class="port-label">Port A — Output</div>
+        <div class="gpio-pins" id="gpio-porta-leds"></div>
+        <div class="port-label">Port B — Output</div>
+        <div class="gpio-pins" id="gpio-portb-leds"></div>
+        <div class="port-label">Input Inject (click PA bit):</div>
+        <div class="gpio-pins" id="gpio-input-pins"></div>
+      </div>
+
+      <div class="periph-section">
+        <h3>Timer (0x40001000)</h3>
+        <div class="timer-progress"><div class="timer-bar" id="timer-bar" style="width:0%"></div></div>
+        <div class="timer-info">
+          <span id="timer-cnt-label">CNT: 0</span>
+          <span id="timer-load-label">LOAD: 0</span>
+          <span id="timer-state-label">Stopped</span>
+        </div>
+      </div>
+
+      <div class="periph-section">
+        <h3>UART Console (0x40002000)</h3>
+        <div id="uart-console"></div>
+        <button class="btn" id="btn-clear-uart">Clear</button>
+      </div>
+
+      <div class="periph-section">
+        <h3>GPIO Registers</h3>
+        <div id="gpio-regs-display"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="panel" id="mem-panel">
+    <div class="panel-header">
+      🔍 Memory
+      <div class="mem-header-controls">
+        Region:
+        <select id="mem-region-sel">
+          <option value="rom">ROM (0x0000_0000)</option>
+          <option value="ram">RAM (0x2000_0000)</option>
+        </select>
+      </div>
+    </div>
+    <div class="mem-controls">
+      <span>Go to:</span>
+      <input id="mem-goto" placeholder="0x00000000" maxlength="10">
+      <button class="btn" id="btn-mem-goto">Go</button>
+      <span id="mem-access-label"></span>
+    </div>
+    <div class="panel-body" id="mem-body">
+      <div class="placeholder">No program loaded.</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="load-overlay">
+  <div id="load-box">
+    <h2>⚡ RISC-V RV32I Emulator</h2>
+    <p>Choose a built-in program or open a .bin file:</p>
+    <ul class="demo-list" id="demo-list"></ul>
+    <div id="overlay-actions">
+      <button class="btn primary" id="btn-file-pick">📂 Open .bin file</button>
+      <button class="btn" id="btn-close-overlay">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script src="js/renderer.js"></script>
+</body>
+</html>

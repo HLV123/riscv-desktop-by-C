@@ -1,0 +1,3 @@
+D:/New folder/riscv-desktop/build/CMakeFiles/riscv_emu_cli.dir
+D:/New folder/riscv-desktop/build/CMakeFiles/edit_cache.dir
+D:/New folder/riscv-desktop/build/CMakeFiles/rebuild_cache.dir
